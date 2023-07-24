@@ -103,6 +103,7 @@ function roleSelect() {
 function characterSelect() {
   const player = {
     name: '',
+    avatar: '',
 
     get getName() {
       return this.name
@@ -153,7 +154,11 @@ function characterSelect() {
       'click',
       () => {
         player.setName = document.querySelector('#name').value
-        document.querySelector('[data-character]').remove()
+        const div = document.querySelector('[data-character]')
+        const gender = div.dataset.character === 'male' ? 0 : 1
+        player.avatar = div.querySelectorAll('img')[gender].src
+        document.querySelector('.logo').src = player.avatar
+        div.remove()
       },
       false,
     )
