@@ -1,24 +1,21 @@
 export default class Board {
-  life = 0
-
   constructor(size = 10) {
     this.shipArr = []
-    this.board = new Array(size).fill(null).map(() => Array(size).fill(null))
+    this.misses = []
+    this.map = new Array(size).fill(null).map(() => Array(size).fill(null))
   }
 
-   valid(ship) {
+  valid(ship) {
     if (!ship) return null
 
     const { x, y } = ship.start
-    const max = this.board.length
-
-    // Check if within game board
+    const max = this.map.length
+    // Check if within game map
     if (x < 0 || y < 0 || ship.end.x >= max || ship.end.y >= max) return null
-
     // Check if square is empty
     for (let i = 0; i < ship.length; i++) {
-      if (x === ship.end.x && this.board[x][y + i] !== null) return null
-      else if (this.board[x + i][y] !== null) return null
+      if (x === ship.end.x && this.map[x][y + i] !== null) return null
+      else if (y === ship.end.y && this.map[x + i][y] !== null) return null
     }
     return this
   }
@@ -26,44 +23,28 @@ export default class Board {
   place(ship) {
     if (!ship) return null
 
-    this.life += ship.life
     this.shipArr.push(ship)
-    
     const { x, y } = ship.start
     for (let i = 0; i < ship.length; i++) {
-      if(x === ship.end.x) this.board[x][y + i] = ship
-      else this.board[x + i][y] = ship
+      if (x === ship.end.x) this.map[x][y + i] = ship
+      else this.map[x + i][y] = ship
     }
     return this
   }
 
   // Returns: Ship if hit
-  reciveAttack({x, y}) {
-    if (this.board[x][y] === null) {
-      this.board[x][y] = 'o'
-      return null
+  reciveAttack({ x, y }) {
+    if (!this.map[x][y] && !this.isMiss({ x, y })) {
+      this.misses.push({ x, y })
     }
-    this.board.life -= 1
-    return this.board[x][y]
+    return this.map[x][y]
   }
-}
 
-export function print(arr){
-  const border = '+++++++++++++++++++++++'
-  console.log(border)
-  let pos = {x: 0, y: 0}
-  arr.forEach(elem => {
-    let row = '+ '
-    elem.forEach(item => {
-      if(item === null) row += '  '
-      else if (item === 'o') row += 'o '
-      else if (item?.isHit(pos)) row += '* '
-      else row += `${item.length} `
-      pos.y += 1
-    })
-    row += '+'
-    console.log(row)
-    pos.x += 1
-  })
-  console.log(border)
+  isMiss(pos) {
+    return (
+      this.misses.find((e) => {
+        return e.x === pos.x && e.y === pos.y
+      }) !== undefined
+    )
+  }
 }

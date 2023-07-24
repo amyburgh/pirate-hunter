@@ -1,30 +1,28 @@
-import Board from "./board.js"
-import {print} from "./board.js"
+import Player from "./player.js"
 import Ship from "./ship.js"
+import print from "./print.js"
 
-const pirate = new Board()
+const p1 = new Player({name: 'Aaron', role: 'hunter'})
+const p2 = new Player({name: 'AI', role: 'Pirate'})
 
-const ship1 = new Ship({x: 0, y: 0},{x: 3, y: 0})
-const ship2 = new Ship({x: 3, y: 3},{x: 3, y: 8})
-const ship3 = new Ship({x: 5, y: 0},{x: 7, y: 0})
+const ships = []
+ships.push(new Ship({x: 0, y: 0},{x: 3, y: 0}))
+ships.push(new Ship({x: 3, y: 3},{x: 3, y: 7}))
+ships.push(new Ship({x: 5, y: 0},{x: 7, y: 0}))
+ships.push(new Ship({x: 5, y: 7},{x: 6, y: 7}))
+ships.push(new Ship({x: 9, y: 7},{x: 9, y: 9}))
 
-pirate.valid(ship1)?.place(ship1)
-pirate.valid(ship2)?.place(ship2)
-pirate.valid(ship3)?.place(ship3)
+ships.forEach(ship => p1.board.valid(ship)?.place(ship))
 
-const att1 = {x: 0, y: 0}
-const att2 = {x: 1, y: 0}
-const att3 = {x: 4, y: 0}
+p2.attack(p1, {x: 0,y: 0})
+p2.attack(p1, {x: 1,y: 0})
+p2.attack(p1, {x: 2,y: 0})
+p2.attack(p1, {x: 3,y: 0})
+p2.attack(p1, {x: 6,y: 7})
 
+p2.attack(p1, {x: 0,y: 3})
+p2.attack(p1, {x: 7,y: 5})
 
-const a = pirate.reciveAttack(att1)?.hit(att1)
-pirate.reciveAttack(att2)?.hit(att2)
-pirate.reciveAttack(att3)?.hit(att3)
-
-console.log('isHit', a.isHit(att1))
-console.log('isHit', a.isHit(att3))
-console.log('isHit', a.isHit(att2))
-
-console.log('Pirate life:', pirate.life)
-console.log('Ships: ', pirate.shipArr.length)
-print(pirate.board)
+console.log(`▷`, p1.name)
+console.log('♡', p1.life)
+console.log(print(p1.board))

@@ -20,9 +20,10 @@ export default class Ship {
     ) + 1
   }
 
+  // For rendering only
   isHit(pos) {
     return this.hits.find(e => {
-      return e.x === pos.x && e.y === pos.y
+      return e.x == pos.x && e.y == pos.y
     }) !== undefined
   }
 
@@ -30,5 +31,9 @@ export default class Ship {
     this.hits.push(pos)
     if (this.life) this.life -= 1
     return this
+  }
+
+  sunk() {
+    return !this.life
   }
 }
