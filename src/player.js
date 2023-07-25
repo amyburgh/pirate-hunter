@@ -3,10 +3,13 @@ import Board from './board.js'
 export default class Player {
   static turn = true
 
-  constructor({ name = 'Admiral', role = 'hunter', boardSize } = {}) {
+  static count = 0
+
+  constructor({ name, role, boardSize }) {
     this.life = 0
-    this.name = name ?? 'Admiral'
-    this.role = role ?? 'hunter'
+    this.player = this.constructor.count += 1
+    this.name = name || 'Captain'
+    this.role = role
     this.board = new Board(boardSize)
   }
 

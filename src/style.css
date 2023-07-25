@@ -17,6 +17,7 @@
   --white: White;
 
   --blue-sqr: rgba(97, 198, 255, 0.2);
+  --grey-sqr: rgba(113, 124, 150, 0.2);
   --lt-grey: #d1d2de;
   --miss: rgba(0, 0, 0, 0.1);
 }
@@ -69,8 +70,11 @@ button:focus-visible {
 .logo {
   height: 5rem;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.logo:hover,
+.github:hover {
+  filter: drop-shadow(0 0 4px var(--blue));
+  /* outline: 1px solid var(--blue); */
 }
 
 header {
@@ -99,16 +103,7 @@ main {
 .select {
   grid-column: 1/3;
   justify-self: center;
-
-  /* position: absolute; */
-  /* z-index: 1; */
-  /* left: 50%; */
-  /* right: 50%; */
-  /* transform: translate(-50%, -50%); */
-  /* transform: translateX(-50%); */
-
   min-width: 480px;
-  /* aspect-ratio: 1; */
 
   margin: 2rem;
   padding: 2rem;
@@ -273,6 +268,71 @@ main {
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+
+  .banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 42px;
+    border-radius: 4px;
+    background-color: var(--red);
+
+    > p {
+      color: white;
+      font-weight: 700;
+      line-height: normal;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+    }
+  }
+
+  .label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .board {
+    > div {
+      /* background-color: var(--blue-sqr); */
+      cursor: pointer;
+      border-radius: 4px;
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  &.player1 {
+    > .board {
+      > .sqr {
+        background-color: var(--blue);
+        opacity: 0.2;
+      }
+      > .sqr:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &.player2 {
+    > .banner {
+      background-color: var(--grey);
+    }
+
+    .board {
+      .sqr {
+        background-color: var(--grey);
+        opacity: 0.2;
+      }
+      > .sqr:hover {
+        opacity: 0.5;
+      }
+    }
+  }
 }
 
 .board {
@@ -280,19 +340,15 @@ main {
   grid-template-columns: repeat(11, 1fr);
   gap: 2px;
   aspect-ratio: 1;
-}
 
-.board > div {
-  background-color: var(--blue-sqr);
-  border-radius: 4px;
-  aspect-ratio: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  .selected {
+    filter: drop-shadow(0 0 4px var(--blue));
+    outline: 1px solid var(--blue);
+  }
 }
 
 .board > div > p,
-.label > p {
+.yard > div > p {
   margin: 0;
   color: #717c96;
   text-align: center;
@@ -310,31 +366,46 @@ main {
 .yard {
   display: grid;
   grid-template-columns: 1fr 10fr;
+
+  .label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.ship-list {
+.graveyard {
   color: var(--grey);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
+  > div {
+    width: 30%;
+  }
 }
 
-.ship-list > div {
-  width: 30%;
-}
-
-.ships {
+.shipyard {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 10px;
-}
 
-.ships > div {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: var(--lt-grey);
+  > div {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: var(--lt-grey);
+  }
+  > div:hover,
+  .ship-selected {
+    filter: drop-shadow(0 0 4px var(--blue));
+    outline: 1px solid var(--blue);
+    /* scale: 1.1; */
+  }
 }
 
 div[data-hit] {
@@ -366,31 +437,6 @@ div[data-ship='2'] {
   width: 20%;
   aspect-ratio: 2/ 1;
   border-radius: 10px 100% 100% 10px;
-}
-
-.label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.banner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 42px;
-  border-radius: 4px;
-  background-color: var(--red);
-}
-
-.banner > p {
-  color: white;
-  font-weight: 700;
-  line-height: normal;
-  letter-spacing: 1.8px;
-  text-transform: uppercase;
 }
 
 /* -------------------------------------------------- */

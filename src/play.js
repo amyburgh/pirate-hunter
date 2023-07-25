@@ -1,3 +1,7 @@
+const ops = {
+  selected: null,
+}
+
 function board() {
   const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
   const div = document.createElement('div')
@@ -6,17 +10,40 @@ function board() {
   for (let i = 0; i < 11; i += 1) {
     for (let j = 0; j < 11; j += 1) {
       const elem = document.createElement('div')
-      if ((!j && i) || (!i && j)) {
+      if (!j && !i) elem.dataset.gutter = true
+      else if ((!j && i) || (!i && j)) {
         const p = document.createElement('p')
         if (!j && i) p.textContent = i
         else if (!i && j) p.textContent = letters[j - 1]
         elem.dataset.gutter = true
         elem.appendChild(p)
-      }
+      } else elem.classList.add('sqr')
       div.appendChild(elem)
     }
   }
   return div
+}
+
+function addBoardHandlers() {
+  const squares = document.querySelectorAll('.player1 .board .sqr')
+  squares.forEach((item) => {
+    item.classList.add('red')
+  })
+}
+
+function addShipHandlers() {
+  const ships = document.querySelectorAll('[data-ship]')
+  console.log(ships)
+  ships.forEach((item) => {
+    item.addEventListener('click', (e) => {
+      if (ops.selected === e.target) {
+        ops.selected = null
+      } else if (ops.selected) return
+      else ops.selected = e.target
+      item.classList.toggle('ship-selected')
+      // console.log(ops.selected)
+    })
+  })
 }
 
 function buildShips() {
@@ -58,48 +85,54 @@ function buildShipsList() {
 }
 
 function buildYard(name) {
-  const div = document.createElement('div')
-  div.classList.add('yard')
+  const container = document.createElement('div')
+  container.classList.add('yard')
 
   const label = document.createElement('div')
   label.classList.add('label')
   const p = document.createElement('p')
   p.textContent = name
   label.appendChild(p)
-  div.appendChild(label)
+  container.appendChild(label)
 
   const ships = document.createElement('div')
   if (name === 'SHIPYARD') {
-    ships.classList.add('ships')
+    ships.classList.add('shipyard')
     buildShips().forEach((ship) => ships.appendChild(ship))
   } else if (name === 'GRAVEYARD') {
-    ships.classList.add('ship-list')
+    ships.classList.add('graveyard')
     buildShipsList().forEach((ship) => ships.appendChild(ship))
   }
-  div.appendChild(ships)
+  container.appendChild(ships)
+  return container
+}
+
+function banner({ player, role }) {
+  const div = document.createElement('div')
+  div.classList.add(role, 'banner')
+
+  const p = document.createElement('p')
+  p.textContent = `${player === 1 ? 'your' : 'opponent'} FLEET`
+
+  div.appendChild(p)
   return div
 }
 
-function PlayArea() {
-  const section = document.createElement('section')
-  section.classList.add('play')
+function setupBoard({ player, name, role }) {
+  const container = document.createElement('section')
+  container.classList.add('play', `player${player}`)
 
-  const div = document.createElement('div')
-  div.classList.add('hunter', 'banner')
+  container.appendChild(banner({ player, role }))
+  container.appendChild(board())
 
-  const p = document.createElement('p')
-  p.textContent = 'HUNTER FLEET'
-
-  div.appendChild(p)
-  section.appendChild(div)
-  section.appendChild(board())
-  section.appendChild(buildYard('SHIPYARD'))
-  // section.appendChild(buildYard('GRAVEYARD'))
-  return section
+  if (name !== 'AI') container.appendChild(buildYard('SHIPYARD'))
+  else container.appendChild(buildYard('GRAVEYARD'))
+  return container
 }
 
-// Select Character
+function placeShips(p1) {
+  addShipHandlers()
+  addBoardHandlers()
+}
 
-function playGame(p1, p2) {}
-
-export { playGame, PlayArea }
+export { placeShips, setupBoard }
